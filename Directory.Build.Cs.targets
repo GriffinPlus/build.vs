@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <DocumentationFile Condition="'$(OmitDocumentationFile)'!='true'">$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)\AssemblyInfoVersion.cs" />
+    <Compile Include="$(CommonAssemblyInfoPath_Cs)" />
+  </ItemGroup>
+
+  <!-- ############################################################################## -->
+  <!-- Check whether important properties were overridden in the project by accident  -->
+  <!-- ############################################################################## -->
+
+  <Target Name="CheckForInvalidOverrides" BeforeTargets="Build">
+
+    <!-- BaseIntermediateOutputPath -->
+    <Error
+      Condition="'$(BaseIntermediateOutputPath)' != '$(BuildVs_BaseIntermediateOutputPath)' and '$(BuildVs_Override_BaseIntermediateOutputPath)' != 'true'"
+      Text="The property 'BaseIntermediateOutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_BaseIntermediateOutputPath' property to 'true'. Otherwise remove setting the 'BaseIntermediateOutputPath' property from the project file." />
+
+    <!-- IntermediateOutputPath -->
+    <Error
+      Condition="'$(IntermediateOutputPath)' != '$(BuildVs_IntermediateOutputPath)' and '$(BuildVs_Override_IntermediateOutputPath)' != 'true'"
+      Text="The property 'IntermediateOutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_IntermediateOutputPath' property to 'true'. Otherwise remove setting the 'IntermediateOutputPath' property from the project file." />
+
+    <!-- OutputPath -->
+    <Error
+      Condition="'$(OutputPath)' != '$(BuildVs_OutputPath)' and '$(BuildVs_Override_OutputPath)' != 'true'"
+      Text="The property 'OutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_OutputPath' property to 'true'. Otherwise remove setting the 'OutputPath' property from the project file." />
+
+  </Target>
+
+</Project>

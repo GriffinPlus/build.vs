@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <WarningLevel>Level3</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <LinkIncremental>false</LinkIncremental>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+
+    <!-- ############################################################################## -->
+    <!-- common                                                                         -->
+    <!-- ############################################################################## -->
+
+    <ClCompile>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ErrorReporting>None</ErrorReporting>
+      <GenerateXMLDocumentationFiles Condition="'$(OmitDocumentationFile)'!='true'">true</GenerateXMLDocumentationFiles>
+      <XMLDocumentationFileName>$(IntDir)</XMLDocumentationFileName>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Xdcmake>
+      <OutputFile Condition="'$(OmitDocumentationFile)'!='true'">$(OutDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+
+    <!-- ############################################################################## -->
+    <!-- configuration specific                                                         -->
+    <!-- ############################################################################## -->
+
+    <ClCompile Condition="$(Configuration.StartsWith('Debug'))">
+      <PreprocessorDefinitions>DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+
+    <Link Condition="$(Configuration.StartsWith('Debug'))">
+      <LinkTimeCodeGeneration></LinkTimeCodeGeneration>
+      <OptimizeReferences>false</OptimizeReferences>
+    </Link>
+
+    <ClCompile Condition="$(Configuration.StartsWith('Release'))">
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <Optimization>MaxSpeed</Optimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <OptimizeReferences>true</OptimizeReferences>
+    </ClCompile>
+
+    <Link Condition="$(Configuration.StartsWith('Release'))">
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+
+  </ItemDefinitionGroup>
+
+  <!-- ############################################################################## -->
+  <!-- Compile *.mcpp files as managed C++ source code, other files as native C/C++   -->
+  <!-- ############################################################################## -->
+
+  <ItemGroup>
+    <ClCompile Update="@(ClCompile)">
+      <CompileAsManaged>false</CompileAsManaged>
+      <CompileAsManaged Condition="'%(Extension)'=='.mcpp'">true</CompileAsManaged>
+    </ClCompile>
+  </ItemGroup>
+
+  <!-- ############################################################################## -->
+  <!-- Add common .NET Assembly Info, if there are managed C++ files in the project   -->
+  <!-- ############################################################################## -->
+
+  <Target Name="InjectCommonAssemblyInfo" BeforeTargets="PrepareForBuild">
+    <ItemGroup>
+      <ManagedCompileFiles Include="@(ClCompile)" Condition="'%(CompileAsManaged)'=='true'" />
+    </ItemGroup>
+    <!-- 
+    <Message Condition="'@(ManagedCompileFiles)' != ''" Text="Detected .NET/CLI file: %(ManagedCompileFiles.Identity)" Importance="high"/>
+    -->
+    <Message Condition="'@(ManagedCompileFiles)' != ''" Text="Injecting .NET AssemblyInfo." Importance="high"/>
+    <ItemGroup Condition="'@(ManagedCompileFiles)' != ''">
+      <!-- version information -->
+      <ClCompile Include="$(MSBuildThisFileDirectory)\AssemblyInfoVersion.mcpp">
+        <CompileAsManaged>true</CompileAsManaged>
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      </ClCompile>
+      <!-- repository specific information -->
+      <ClCompile Include="$(CommonAssemblyInfoPath_Cpp)">
+        <CompileAsManaged>true</CompileAsManaged>
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      </ClCompile>
+    </ItemGroup>
+  </Target>
+
+  <!-- ############################################################################## -->
+  <!-- Check whether important properties were overridden in the project by accident  -->
+  <!-- ############################################################################## -->
+
+  <Target Name="CheckForInvalidOverrides" BeforeTargets="Build">
+
+    <!-- IntDir -->
+    <Error
+      Condition="'$(IntDir)' != '$(BuildVs_IntDir)' and '$(BuildVs_Override_IntDir)' != 'true'"
+      Text="The 'IntDir' property was overridden by the project. If this was desired, please set the 'BuildVs_Override_IntDir' property to 'true'. Otherwise remove setting the 'IntDir' property from the project file." />
+
+    <!-- OutDir -->
+    <Error
+      Condition="'$(OutDir)' != '$(BuildVs_OutDir)' and '$(BuildVs_Override_OutDir)' != 'true'"
+      Text="The 'OutDir' property was overridden by the project. If this was desired, please set the 'BuildVs_Override_OutDir' property to 'true'. Otherwise remove setting the 'OutDir' property from the project file." />
+
+    <!-- TargetFrameworkVersion -->
+    <Error
+      Condition="'$(TargetFrameworkVersion)' != '$(BuildVs_TargetFrameworkVersion)'"
+      Text="The 'TargetFrameworkVersion' property was overridden by the project. Please remove setting the 'TargetFrameworkVersion' property from the project file." />
+
+    <!-- WindowsTargetPlatformVersion -->
+    <Error
+      Condition="'$(WindowsTargetPlatformVersion)' != '$(BuildVs_WindowsTargetPlatformVersion)'"
+      Text="The 'WindowsTargetPlatformVersion' property was overridden by the project. Please remove setting the 'WindowsTargetPlatformVersion' property from the project file." />
+
+  </Target>
+
+</Project>

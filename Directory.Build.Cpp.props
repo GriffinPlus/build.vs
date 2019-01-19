@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BuildVs_TargetFrameworkVersion>v4.6.1</BuildVs_TargetFrameworkVersion>
+    <BuildVs_WindowsTargetPlatformVersion>8.1</BuildVs_WindowsTargetPlatformVersion>
+    <TargetFrameworkVersion>$(BuildVs_TargetFrameworkVersion)</TargetFrameworkVersion>
+    <WindowsTargetPlatformVersion>$(BuildVs_WindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UnifiedPlatform>Unknown</UnifiedPlatform>
+    <UnifiedPlatform Condition="'$(Platform)' == 'Win32'">x86</UnifiedPlatform>
+    <UnifiedPlatform Condition="'$(Platform)' == 'x64'">x64</UnifiedPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildVs_OutDir>$(SolutionDir)_build\$(SolutionName).$(UnifiedPlatform).$(Configuration)\$(TargetFramework)\</BuildVs_OutDir>
+    <BuildVs_IntDir>$(SolutionDir)_build\.obj\$(MSBuildProjectName)\$(UnifiedPlatform).$(Configuration)\$(TargetFramework)\</BuildVs_IntDir>
+    <OutDir>$(BuildVs_OutDir)</OutDir>
+    <IntDir>$(BuildVs_IntDir)</IntDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='Win32'">
+    <PreprocessorDefinitions>WIN32;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <PreprocessorDefinitions>WIN64;_WIN64;_AMD64_;_SIZE_T_DEFINED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+  </PropertyGroup>
+
+</Project>
