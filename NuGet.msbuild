@@ -41,14 +41,14 @@
 		<ItemGroup>
 			<NupkgFiles Include="$(NuGetOutputDir)\*.nupkg" />
 		</ItemGroup>
-		<Error Condition="'$(PRIVATE_NUGETFEED_PATH)'==''" Text="Environment variable PRIVATE_NUGETFEED_PATH is not set." />
+		<Error Condition="'$(BSTE_DEV_BUILD_NUGETFEED_PATH)'==''" Text="Environment variable BSTE_DEV_BUILD_NUGETFEED_PATH is not set." />
 		<Message Importance="High" Text="" />
 		<Message Importance="High" Text="------------------------------------------------------------------------------------------------------------------" />
 		<Message Importance="High" Text="Publishing NuGet packages..." />
 		<Message Importance="High" Text="File: %(NupkgFiles.Identity)" Condition="'@(NupkgFiles)' != ''"/>
 		<Message Importance="High" Text="No NuGet packages found." Condition="'@(NupkgFiles)' == ''"/>
 		<Message Importance="High" Text="------------------------------------------------------------------------------------------------------------------" />
-		<Exec Condition="'@(NupkgFiles)' != ''" Command="&quot;$(NuGetToolPath)&quot; add &quot;%(NupkgFiles.Identity)&quot; -Source &quot;$(PRIVATE_NUGETFEED_PATH)&quot;" />
+		<Exec Condition="'@(NupkgFiles)' != ''" Command="&quot;$(NuGetToolPath)&quot; add &quot;%(NupkgFiles.Identity)&quot; -Source &quot;$(BSTE_DEV_BUILD_NUGETFEED_PATH)&quot;" />
 		<Message Importance="High" Text="------------------------------------------------------------------------------------------------------------------" />
 		<Message Importance="High" Text="" />
 	</Target>

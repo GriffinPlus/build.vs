@@ -135,16 +135,6 @@
       Condition="'$(OutDir)' != '$(BuildVs_OutDir)' and '$(BuildVs_Override_OutDir)' != 'true'"
       Text="The 'OutDir' property was overridden by the project. If this was desired, please set the 'BuildVs_Override_OutDir' property to 'true'. Otherwise remove setting the 'OutDir' property from the project file." />
 
-    <!-- TargetFrameworkVersion -->
-    <Error
-      Condition="'$(TargetFrameworkVersion)' != '$(BuildVs_TargetFrameworkVersion)'"
-      Text="The 'TargetFrameworkVersion' property was overridden by the project. Please remove setting the 'TargetFrameworkVersion' property from the project file." />
-
-    <!-- WindowsTargetPlatformVersion -->
-    <Error
-      Condition="'$(WindowsTargetPlatformVersion)' != '$(BuildVs_WindowsTargetPlatformVersion)'"
-      Text="The 'WindowsTargetPlatformVersion' property was overridden by the project. Please remove setting the 'WindowsTargetPlatformVersion' property from the project file." />
-
   </Target>
 
 </Project>
