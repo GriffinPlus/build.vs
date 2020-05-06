@@ -8,8 +8,8 @@ Import-Module "$ScriptDir\Helper.psm1"
 
 # Properties
 [string] $ToolName = "LicenseCollector"
-[string] $ToolDownloadUrl = "https://github.com/GriffinPlus/LicenseCollector/releases/download/v1.0.0-rc5/LicenseCollector-portable-v1.0.0-rc.5.zip"
-[string] $ToolVersionHash = "04C0EC46B59CF3F0240A30EB06340705DE7D66C0B037E204C1D5A71FFE39DA38"
+[string] $ToolDownloadUrl = "https://github.com/GriffinPlus/LicenseCollector/releases/download/v1.0.0/LicenseCollector-portable-v1.0.0.zip"
+[string] $ToolVersionHash = "0CBAD527557AFE4FE093156267D69C6920CA8BA1950F66E811BF196CECEBBF54"
 
 #-------------------------------------------------------------------------------------------------------------------------------------
 
