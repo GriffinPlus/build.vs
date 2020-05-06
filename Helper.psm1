@@ -113,7 +113,7 @@ function DownloadBuildTool_Internal
 
 	Write-Host -ForegroundColor "Green" "Check if $ToolName in version '$ToolVersionHash' already exists..."
 
-	if (!(Test-Path $ToolDirectory -PathType Leaf))
+	if (!(Test-Path $ToolDirectory -PathType Container))
 	{
 		Write-Host -ForegroundColor "Green" "$ToolName is missing and is now downloaded from '$ToolDownloadUrl'..."
 
@@ -157,7 +157,8 @@ function DownloadBuildTool_Internal
 		}
 	}
 	
-	return $ToolDirectory
+	Write-Output ""  # ensures that DownloadBuildTool() works with its [-1]
+	Write-Output "$ToolDirectory"
 }
 
 function DownloadBuildTool
