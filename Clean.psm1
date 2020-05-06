@@ -20,17 +20,17 @@ function Clean
 		Write-Host -Foreground "Green" "Removing old build output..."
 
 		foreach($path in $OutputPaths)
-        {
-            if (Test-Path $path -PathType Container)
-            {
-                Write-Host -ForegroundColor "Green" "Removing everything under '$path'..."
-                Remove-Item "$path" -Recurse -ErrorAction Ignore
-            }
-            else
-            {
-                Write-Host -ForegroundColor "Green" "Specified '$path' is not a folder or not existing"
-            }
-        }
+		{
+			if (Test-Path $path -PathType Container)
+			{
+				Write-Host -ForegroundColor "Green" "Removing everything under '$path'..."
+				Remove-Item "$path" -Recurse -ErrorAction Ignore
+			}
+			else
+			{
+				Write-Host -ForegroundColor "Green" "Specified '$path' is not a folder or not existing"
+			}
+		}
 	}
 	Catch [Exception]
 	{
