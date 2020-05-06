@@ -8,8 +8,8 @@ Import-Module "$ScriptDir\Helper.psm1"
 
 # Properties
 [string] $ToolName = "PreBuildWizard"
-[string] $ToolDownloadUrl = "https://github.com/GriffinPlus/PreBuildWizard/releases/download/v2.0.1/PreBuildWizard-portable-v2.0.0.zip"
-[string] $ToolVersionHash = "88039C1B5E18ED32E1DB61E3E9D04353C15F080E93B274F18C0F3993F98EAB55"
+[string] $ToolDownloadUrl = "https://github.com/GriffinPlus/PreBuildWizard/releases/download/v2.0.0/PreBuildWizard-portable-v2.0.0.zip"
+[string] $ToolVersionHash = "BE8D36C8552B6C35F90E6E6451035D584164ABAA831329A5479B7ED485D2623D"
 
 #-------------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ function PreBuildWizard
 		$ToolDirectory = DownloadBuildTool $ToolName $ToolDownloadUrl $ToolVersionHash
 		$SolutionDir = Split-Path -Path "$SolutionPath"
 		$BaseIntermediateOutputPath = "$SolutionDir\_build\.obj"
-		$PreBuildWizardToolPath = "$ToolDirectory\PreBuildWizard.exe"
+		$PreBuildWizardToolPath = "$ToolDirectory\PreBuildWizard.dll"
 		if (!(Test-Path $PreBuildWizardToolPath -PathType Leaf))
 		{
 			Write-Host -ForegroundColor "Red" "The PreBuildWizard could not be found under '$PreBuildWizardToolPath'. Stopping further processing..."
@@ -45,7 +45,7 @@ function PreBuildWizard
 			$PreBuildWizardAbsoluteSourcePath = [System.IO.Path]::GetFullPath((Join-Path $SolutionDir $PreBuildWizardRelativeSourcePath))
 			if ($PreBuildWizardAbsoluteSourcePath.StartsWith($SolutionDir))
 			{
-				EnvRunExec ( "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
+				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
 			}
 			else
 			{
@@ -54,7 +54,7 @@ function PreBuildWizard
 		}
 		else
 		{
-			EnvRunExec ( "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$SolutionDir" )
+			EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$SolutionDir" )
 		}
 	}
 	Catch [Exception]

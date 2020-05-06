@@ -30,7 +30,7 @@ function LicenseCollector
 	Try
 	{
 		$ToolDirectory = DownloadBuildTool $ToolName $ToolDownloadUrl $ToolVersionHash
-		$LicenseCollectorToolPath = "$ToolDirectory\LicenseCollector.exe"
+		$LicenseCollectorToolPath = "$ToolDirectory\LicenseCollector.dll"
 		if (!(Test-Path $LicenseCollectorToolPath -PathType Leaf))
 		{
 			Write-Host -ForegroundColor "Red" "The LicenseCollector could not be found under '$LicenseCollectorToolPath'. Stopping further processing..."
@@ -43,7 +43,8 @@ function LicenseCollector
 
 		Write-Host -ForegroundColor "Green" "Collecting licenses for ($Configuration|$Platform) build..."
 		
-		$cmd = @($LicenseCollectorToolPath)
+		$cmd = @("dotnet.exe")
+		$cmd += $LicenseCollectorToolPath
 		if ($IsVerbose)
 		{
 			$cmd += "-v"
