@@ -2,6 +2,7 @@ Set-StrictMode -Version latest
 $ErrorActionPreference = "Stop"
 [String]$ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 
+Import-Module "$ScriptDir\Configuration.psm1"
 Import-Module "$ScriptDir\Helper.psm1"
 
 #-------------------------------------------------------------------------------------------------------------------------------------
