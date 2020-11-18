@@ -2,6 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <SolutionConfiguration Condition="'$(SolutionConfiguration)' == ''">Unknown</SolutionConfiguration>
+    <SolutionPlatform Condition="'$(SolutionPlatform)' == ''">Unknown</SolutionPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <BuildVs_WindowsTargetPlatformVersion>8.1</BuildVs_WindowsTargetPlatformVersion>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>false</CLRSupport>
