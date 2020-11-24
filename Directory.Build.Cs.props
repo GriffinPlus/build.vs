@@ -2,6 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
     <PropertyGroup>
+        <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <FileAlignment>512</FileAlignment>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
