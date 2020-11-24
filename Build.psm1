@@ -34,40 +34,56 @@ function Build
 				$cmd += "$SolutionPath"
 				$cmd += "/property:Configuration=$configuration"
 				$cmd += "/property:Platform=$platform"
-				$cmd += "/property:SolutionConfiguration=$configuration"
-				$cmd += "/property:SolutionPlatform=$platform"
 				if ($MsbuildProperties) { $cmd += "/property:$MsbuildProperties" }
 				$cmd += "/verbosity:$MsbuildVerbosity"
 				$cmd += "/t:Build"
 				EnvRunExec $cmd
+			}
+		}
 
-				# write list of files in output directory
-				Write-Host -ForegroundColor "Green" "Writing list of files in output directory for platform '$platform' in configuration '$configuration'..."
-				$BuildDirectoryPath = "$SolutionDirectoryPath\_build\$SolutionName.$platform.$configuration"
-				$OutputFilesListPath = "$SolutionDirectoryPath\$SolutionName.$platform.$configuration.files.txt"
-				Push-Location "$BuildDirectoryPath"
-				Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
-				Pop-Location
+		# clear index of files in output directories
+		$OutputFilesListBasePath = "$SolutionDirectoryPath\out-index"
+		Remove-Item -Recurse -Path "$OutputFilesListBasePath" -ErrorAction Ignore
 
-				# Check consistency of build output
-				if (!$SkipConsistencyCheck)
+		# write list of files in output directorys
+		Write-Host -ForegroundColor "Green" "Writing list of files in output directories..."
+		$BuildPath = "$SolutionDirectoryPath\_build"
+		foreach ($Project in Get-ChildItem -Path "$BuildPath" -Directory -Exclude .* -Force -ErrorAction SilentlyContinue)
+		{
+			$ProjectPath = "$BuildPath\$($Project.Name)"
+			foreach ($Configuration in Get-ChildItem -Path "$ProjectPath" -Directory -Force -ErrorAction SilentlyContinue)
+			{
+				$ConfigurationPath = "$ProjectPath\$($Configuration.Name)"
+				foreach ($Target in Get-ChildItem -Path "$ConfigurationPath" -Directory -Force -ErrorAction SilentlyContinue)
 				{
-					Write-Host -ForegroundColor "Green" "Checking consistency of files in output directory for platform '$platform' in configuration '$configuration'..."
-					$cmd = @($GitPath)
-					$cmd += "diff"
-					$cmd += "--"
-					$cmd += Resolve-Path -Relative "$OutputFilesListPath"
-					$diff = (EnvRunExec $cmd) | Out-String
-					if ($diff.Length -ne 0)
-					{
-						Write-Host -ForegroundColor "Red" "Encountered a diff for '$OutputFilesListPath'. Check build output for new assemblies..."
-						Write-Host -ForegroundColor "Red" "$diff"
-						if ($PauseOnError) {
-							Read-Host "Press ANY key..."
-						}
-						exit(-1)
-					}
+					$TargetDirectoryPath = "$ConfigurationPath\$($Target.Name)"
+					$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)\$($Target.Name).files.txt"
+					New-Item -Force -Path "$OutputFilesListBasePath" -Name "$($Project.Name)\$($Configuration.Name)" -ItemType "directory" | out-null
+					Write-Host "=> $OutputFilesListPath"
+					Push-Location "$TargetDirectoryPath"
+					Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
+					Pop-Location
 				}
+			}
+		}
+
+		# Check consistency of build output
+		if (!$SkipConsistencyCheck)
+		{
+			Write-Host -ForegroundColor "Green" "Checking consistency of files in output directories..."
+			$cmd = @($GitPath)
+			$cmd += "diff"
+			$cmd += "--"
+			$cmd += Resolve-Path -Relative "$OutputFilesListBasePath"
+			$diff = (EnvRunExec $cmd) | Out-String
+			if ($diff.Length -ne 0)
+			{
+				Write-Host -ForegroundColor "Red" "Encountered a diff for '$OutputFilesListBasePath'. Check build output for new assemblies..."
+				Write-Host -ForegroundColor "Red" "$diff"
+				if ($PauseOnError) {
+					Read-Host "Press ANY key..."
+				}
+				exit(-1)
 			}
 		}
 	}

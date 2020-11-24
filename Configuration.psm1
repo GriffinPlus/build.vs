@@ -13,7 +13,6 @@ $ErrorActionPreference = "Stop"
 [string] $PRODUCT_NAME_DEFAULT                     = "Default"
 [string] $RELEASE_DIRECTORY_DEFAULT                = "C:\Releases"
 [string] $GIT_PATH_DEFAULT                         = "C:\Program Files\Git\bin"
-[string] $MSBUILD_15_PATH_DEFAULT                  = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin"
 [string] $BUILD_CONFIGURATIONS_DEFAULT             = "Debug,Release"
 [string] $BUILD_PLATFORMS_DEFAULT                  = "Any CPU,x86,x64"
 [string] $USE_REPO_NUGET_CACHE_DEFAULT             = "false"
@@ -142,22 +141,39 @@ $global:GitPath = "$global:GitDirectoryPath\git.exe"
 
 # ---------------------------------------------------------------------------------------------------------------------
 
-if (Test-Path env:MSBUILD_15_PATH)
+if (Test-Path env:MSBUILD_PATH)
 {
-	$env:MSBUILD_15_PATH = $env:MSBUILD_15_PATH.Trim()
+	$env:MSBUILD_PATH = $env:MSBUILD_PATH.Trim()
 	Write-Host `
 		-ForegroundColor "Green" `
-		"Environment variable MSBUILD_15_PATH is set to: $env:MSBUILD_15_PATH"
+		"Environment variable MSBUILD_PATH is set to: $env:MSBUILD_PATH"
 }
 else
 {
-	$env:MSBUILD_15_PATH = $MSBUILD_15_PATH_DEFAULT
+    # determine default location of msbuild.exe, if not specified explicitly
+    # ---------------------------------------------------------------------------------------------
+    [string[]] $MSBUILD_LOCATIONS = @( `
+        'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin', `
+        'C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin', `
+        'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\bin', `
+        'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin')
+
+    [string] $MSBUILD_PATH_DEFAULT = ''
+    foreach ($path in $MSBUILD_LOCATIONS)
+    {
+        if (Test-Path "$path\msbuild.exe") {
+            $MSBUILD_PATH_DEFAULT = $path
+            break;
+        }
+    }
+
+	$env:MSBUILD_PATH = $MSBUILD_PATH_DEFAULT
 	Write-Host `
 		-ForegroundColor "Yellow" `
-		"Environment variable MSBUILD_15_PATH is not set. Falling back to: $env:MSBUILD_15_PATH"
+		"Environment variable MSBUILD_PATH is not set. Falling back to: $env:MSBUILD_PATH"
 }
 
-$global:MsbuildDirectoryPath = $env:MSBUILD_15_PATH
+$global:MsbuildDirectoryPath = $env:MSBUILD_PATH
 $global:MsbuildPath = "$global:MsbuildDirectoryPath\msbuild.exe"
 
 # push msbuild binary directory to PATH variable to ensure that nuget.exe finds the correct one

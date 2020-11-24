@@ -2,29 +2,17 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
     <PropertyGroup>
-        <SolutionConfiguration Condition="'$(SolutionConfiguration)' == ''">Unknown</SolutionConfiguration>
-        <SolutionPlatform Condition="'$(SolutionPlatform)' == ''">Unknown</SolutionPlatform>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <FileAlignment>512</FileAlignment>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo> <!-- .NET Core projects will otherwise generate conflicting assembly info -->
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
     <PropertyGroup>
-        <UnifiedPlatform>Unknown</UnifiedPlatform>
-        <UnifiedPlatform Condition="'$(Platform)' == 'x86'">x86</UnifiedPlatform>
-        <UnifiedPlatform Condition="'$(Platform)' == 'x64'">x64</UnifiedPlatform>
-        <UnifiedPlatform Condition="'$(Platform)' == 'AnyCPU'">AnyCPU</UnifiedPlatform>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <BuildVs_OutputPath>$(SolutionDir)_build\$(SolutionName).$(SolutionPlatform).$(SolutionConfiguration)\</BuildVs_OutputPath>
-        <BuildVs_BaseIntermediateOutputPath>$(SolutionDir)_build\.obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
-        <BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)\$(UnifiedPlatform).$(Configuration)\</BuildVs_IntermediateOutputPath>
+        <BuildVs_OutputPath>..\..\_build\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutputPath>
+        <BuildVs_BaseIntermediateOutputPath>..\..\_build\.obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
+        <BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)\$(Platform).$(Configuration)\</BuildVs_IntermediateOutputPath>
         <OutputPath>$(BuildVs_OutputPath)</OutputPath>
         <BaseIntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)</BaseIntermediateOutputPath>
         <IntermediateOutputPath>$(BuildVs_IntermediateOutputPath)</IntermediateOutputPath>
@@ -50,7 +38,7 @@
 
     <PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
         <BuildVs_DebugSymbols>true</BuildVs_DebugSymbols>
-        <BuildVs_DebugType>full</BuildVs_DebugType>
+        <BuildVs_DebugType>portable</BuildVs_DebugType>
         <BuildVs_Optimize>false</BuildVs_Optimize>
         <DebugSymbols>$(BuildVs_DebugSymbols)</DebugSymbols>
         <DebugType>$(BuildVs_DebugType)</DebugType>
@@ -60,7 +48,7 @@
 
     <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
         <BuildVs_DebugSymbols>true</BuildVs_DebugSymbols>
-        <BuildVs_DebugType>pdbonly</BuildVs_DebugType>
+        <BuildVs_DebugType>portable</BuildVs_DebugType>
         <BuildVs_Optimize>true</BuildVs_Optimize>
         <DebugSymbols>$(BuildVs_DebugSymbols)</DebugSymbols>
         <DebugType>$(BuildVs_DebugType)</DebugType>
