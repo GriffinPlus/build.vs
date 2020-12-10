@@ -1,64 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <PropertyGroup>
-        <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
-        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    </PropertyGroup>
+	<PropertyGroup>
+		<Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+		<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <FileAlignment>512</FileAlignment>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo> <!-- .NET Core projects will otherwise generate conflicting assembly info -->
-        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
-    </PropertyGroup>
+	<PropertyGroup>
+		<FileAlignment>512</FileAlignment>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<!-- .NET Core projects will otherwise generate conflicting assembly info -->
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <BuildVs_OutputPath>..\..\_build\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutputPath>
-        <BuildVs_BaseIntermediateOutputPath>..\..\_build\.obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
-        <BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)\$(Platform).$(Configuration)\</BuildVs_IntermediateOutputPath>
-        <OutputPath>$(BuildVs_OutputPath)</OutputPath>
-        <BaseIntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)</BaseIntermediateOutputPath>
-        <IntermediateOutputPath>$(BuildVs_IntermediateOutputPath)</IntermediateOutputPath>
-    </PropertyGroup>
+	<PropertyGroup>
+		<BuildVs_OutputPath>..\..\_build\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutputPath>
+		<BuildVs_BaseIntermediateOutputPath>..\..\_build\.obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
+		<BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)\$(Platform).$(Configuration)\</BuildVs_IntermediateOutputPath>
+		<OutputPath>$(BuildVs_OutputPath)</OutputPath>
+		<BaseIntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)</BaseIntermediateOutputPath>
+		<IntermediateOutputPath>$(BuildVs_IntermediateOutputPath)</IntermediateOutputPath>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Platform)' == 'x86'">
-        <BuildVs_PlatformTarget>x86</BuildVs_PlatformTarget>
-        <PlatformTarget>$(BuildVs_PlatformTarget)</PlatformTarget>
-        <DefineConstants>$(DefineConstants);WIN32</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Platform)' == 'x86'">
+		<BuildVs_PlatformTarget>x86</BuildVs_PlatformTarget>
+		<PlatformTarget>$(BuildVs_PlatformTarget)</PlatformTarget>
+		<DefineConstants>$(DefineConstants);WIN32</DefineConstants>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Platform)' == 'x64'">
-        <BuildVs_PlatformTarget>x64</BuildVs_PlatformTarget>
-        <PlatformTarget>$(BuildVs_PlatformTarget)</PlatformTarget>
-        <DefineConstants>$(DefineConstants);WIN64</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Platform)' == 'x64'">
+		<BuildVs_PlatformTarget>x64</BuildVs_PlatformTarget>
+		<PlatformTarget>$(BuildVs_PlatformTarget)</PlatformTarget>
+		<DefineConstants>$(DefineConstants);WIN64</DefineConstants>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
-        <BuildVs_PlatformTarget>AnyCPU</BuildVs_PlatformTarget>
-        <PlatformTarget>$(BuildVs_PlatformTarget)</PlatformTarget>
-        <DefineConstants>$(DefineConstants)</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
+		<BuildVs_PlatformTarget>AnyCPU</BuildVs_PlatformTarget>
+		<PlatformTarget>$(BuildVs_PlatformTarget)</PlatformTarget>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
-        <BuildVs_DebugSymbols>true</BuildVs_DebugSymbols>
-        <BuildVs_DebugType>portable</BuildVs_DebugType>
-        <BuildVs_Optimize>false</BuildVs_Optimize>
-        <DebugSymbols>$(BuildVs_DebugSymbols)</DebugSymbols>
-        <DebugType>$(BuildVs_DebugType)</DebugType>
-        <Optimize>$(BuildVs_Optimize)</Optimize>
-        <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
+		<BuildVs_DebugSymbols>true</BuildVs_DebugSymbols>
+		<BuildVs_DebugType>portable</BuildVs_DebugType>
+		<BuildVs_Optimize>false</BuildVs_Optimize>
+		<DebugSymbols>$(BuildVs_DebugSymbols)</DebugSymbols>
+		<DebugType>$(BuildVs_DebugType)</DebugType>
+		<Optimize>$(BuildVs_Optimize)</Optimize>
+		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
-        <BuildVs_DebugSymbols>true</BuildVs_DebugSymbols>
-        <BuildVs_DebugType>portable</BuildVs_DebugType>
-        <BuildVs_Optimize>true</BuildVs_Optimize>
-        <DebugSymbols>$(BuildVs_DebugSymbols)</DebugSymbols>
-        <DebugType>$(BuildVs_DebugType)</DebugType>
-        <Optimize>$(BuildVs_Optimize)</Optimize>
-        <DefineConstants>$(DefineConstants)</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
+		<BuildVs_DebugSymbols>true</BuildVs_DebugSymbols>
+		<BuildVs_DebugType>portable</BuildVs_DebugType>
+		<BuildVs_Optimize>true</BuildVs_Optimize>
+		<DebugSymbols>$(BuildVs_DebugSymbols)</DebugSymbols>
+		<DebugType>$(BuildVs_DebugType)</DebugType>
+		<Optimize>$(BuildVs_Optimize)</Optimize>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
 </Project>

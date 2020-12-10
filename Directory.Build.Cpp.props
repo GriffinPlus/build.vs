@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <PropertyGroup>
-        <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
-        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    </PropertyGroup>
+	<PropertyGroup>
+		<Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+		<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <BuildVs_WindowsTargetPlatformVersion>8.1</BuildVs_WindowsTargetPlatformVersion>
-        <CharacterSet>Unicode</CharacterSet>
-        <CLRSupport>false</CLRSupport>
-    </PropertyGroup>
+	<PropertyGroup>
+		<BuildVs_WindowsTargetPlatformVersion>8.1</BuildVs_WindowsTargetPlatformVersion>
+		<CharacterSet>Unicode</CharacterSet>
+		<CLRSupport>false</CLRSupport>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <BuildVs_OutDir>..\..\_build\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutDir>
-        <BuildVs_IntDir>..\..\_build\.obj\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_IntDir>
-        <OutDir>$(BuildVs_OutDir)</OutDir>
-        <IntDir>$(BuildVs_IntDir)</IntDir>
-    </PropertyGroup>
+	<PropertyGroup>
+		<BuildVs_OutDir>..\..\_build\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutDir>
+		<BuildVs_IntDir>..\..\_build\.obj\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_IntDir>
+		<OutDir>$(BuildVs_OutDir)</OutDir>
+		<IntDir>$(BuildVs_IntDir)</IntDir>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Platform)'=='x86'">
-        <PreprocessorDefinitions>WIN32;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Platform)'=='x86'">
+		<PreprocessorDefinitions>WIN32;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Platform)'=='x64'">
-        <PreprocessorDefinitions>WIN64;_WIN64;_AMD64_;_SIZE_T_DEFINED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Platform)'=='x64'">
+		<PreprocessorDefinitions>WIN64;_WIN64;_AMD64_;_SIZE_T_DEFINED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+	</PropertyGroup>
 
 </Project>

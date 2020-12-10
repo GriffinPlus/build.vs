@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <Import Project="Directory.Build.Cs.targets" Condition="'$(MSBuildProjectExtension)' == '.csproj'" />
-    <Import Project="Directory.Build.Cpp.targets" Condition="'$(MSBuildProjectExtension)' == '.vcxproj'" />
-    <Import Project="NuGet.msbuild" />
+	<Import Project="Directory.Build.Cs.targets" Condition="'$(MSBuildProjectExtension)' == '.csproj'" />
+	<Import Project="Directory.Build.Cpp.targets" Condition="'$(MSBuildProjectExtension)' == '.vcxproj'" />
+	<Import Project="NuGet.msbuild" />
 
 </Project>

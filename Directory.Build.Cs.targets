@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <ItemGroup>
-        <Compile Include="$(MSBuildThisFileDirectory)\AssemblyInfoVersion.cs" />
-        <Compile Include="$(CommonAssemblyInfoPath_Cs)" />
-    </ItemGroup>
+	<ItemGroup>
+		<Compile Include="$(MSBuildThisFileDirectory)\AssemblyInfoVersion.cs" />
+		<Compile Include="$(CommonAssemblyInfoPath_Cs)" />
+	</ItemGroup>
 
-    <PropertyGroup>
-        <DocumentationFile Condition="'$(OmitDocumentationFile)'!='true'">$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-    </PropertyGroup>
+	<PropertyGroup>
+		<DocumentationFile Condition="'$(OmitDocumentationFile)'!='true'">$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+	</PropertyGroup>
 
-    <!-- ############################################################################## -->
-    <!-- Check whether important properties were overridden in the project by accident  -->
-    <!-- ############################################################################## -->
+	<!-- ############################################################################## -->
+	<!-- Check whether important properties were overridden in the project by accident  -->
+	<!-- ############################################################################## -->
 
-    <Target Name="CheckForInvalidOverrides" BeforeTargets="Build">
+	<Target Name="CheckForInvalidOverrides" BeforeTargets="Build">
 
-        <!-- BaseIntermediateOutputPath -->
-        <Error
-          Condition="'$(BaseIntermediateOutputPath)' != '$(BuildVs_BaseIntermediateOutputPath)' and '$(BuildVs_Override_BaseIntermediateOutputPath)' != 'true'"
-          Text="The property 'BaseIntermediateOutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_BaseIntermediateOutputPath' property to 'true'. Otherwise remove setting the 'BaseIntermediateOutputPath' property from the project file." />
+		<!-- BaseIntermediateOutputPath -->
+		<Error
+			Condition="'$(BaseIntermediateOutputPath)' != '$(BuildVs_BaseIntermediateOutputPath)' and '$(BuildVs_Override_BaseIntermediateOutputPath)' != 'true'"
+			Text="The property 'BaseIntermediateOutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_BaseIntermediateOutputPath' property to 'true'. Otherwise remove setting the 'BaseIntermediateOutputPath' property from the project file." />
 
-        <!-- IntermediateOutputPath : Overridden by build scripts -->
-        <!-- OutputPath : Overridden by build scripts -->
+		<!-- IntermediateOutputPath : Overridden by build scripts -->
+		<!-- OutputPath : Overridden by build scripts -->
 
-        <!-- DebugSymbols -->
-        <Error
-          Condition="'$(DebugSymbols)' != '$(BuildVs_DebugSymbols)'"
-          Text="The property 'DebugSymbols' was overridden by the project. Please remove setting the 'DebugSymbols' property from the project file." />
+		<!-- DebugSymbols -->
+		<Error
+			Condition="'$(DebugSymbols)' != '$(BuildVs_DebugSymbols)'"
+			Text="The property 'DebugSymbols' was overridden by the project. Please remove setting the 'DebugSymbols' property from the project file." />
 
-        <!-- DebugType -->
-        <Error
-          Condition="'$(DebugType)' != '$(BuildVs_DebugType)'"
-          Text="The property 'DebugType' was overridden by the project. Please remove setting the 'DebugType' property from the project file." />
+		<!-- DebugType -->
+		<Error
+			Condition="'$(DebugType)' != '$(BuildVs_DebugType)'"
+			Text="The property 'DebugType' was overridden by the project. Please remove setting the 'DebugType' property from the project file." />
 
-        <!-- Optimize -->
-        <Error
-          Condition="'$(Optimize)' != '$(BuildVs_Optimize)'"
-          Text="The property 'Optimize' was overridden by the project. Please remove setting the 'Optimize' property from the project file." />
+		<!-- Optimize -->
+		<Error
+			Condition="'$(Optimize)' != '$(BuildVs_Optimize)'"
+			Text="The property 'Optimize' was overridden by the project. Please remove setting the 'Optimize' property from the project file." />
 
-  </Target>
+	</Target>
 
 </Project>
