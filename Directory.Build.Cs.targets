@@ -18,9 +18,11 @@
 	<Target Name="CheckForInvalidOverrides" BeforeTargets="Build">
 
 		<!-- BaseIntermediateOutputPath -->
+		<!--
 		<Error
 			Condition="'$(BaseIntermediateOutputPath)' != '$(BuildVs_BaseIntermediateOutputPath)' and '$(BuildVs_Override_BaseIntermediateOutputPath)' != 'true'"
 			Text="The property 'BaseIntermediateOutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_BaseIntermediateOutputPath' property to 'true'. Otherwise remove setting the 'BaseIntermediateOutputPath' property from the project file." />
+		-->
 
 		<!-- IntermediateOutputPath : Overridden by build scripts -->
 		<!-- OutputPath : Overridden by build scripts -->
