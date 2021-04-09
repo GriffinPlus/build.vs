@@ -19,7 +19,7 @@ function PreBuildWizard
 	Param
 	(
 		[Parameter()][string] $SolutionPath = $global:SolutionPath,
-		[Parameter()][string] $PreBuildWizardRelativeSourcePath,
+		[Parameter()][string] $PreBuildWizardRelativeSourcePath = "src",
 		[Parameter()][switch] $PauseOnError
 	)
 
@@ -41,21 +41,14 @@ function PreBuildWizard
 
 		Write-Host -ForegroundColor "Green" "Running PreBuildWizard..."
 		
-		if ($PreBuildWizardRelativeSourcePath)
+		$PreBuildWizardAbsoluteSourcePath = [System.IO.Path]::GetFullPath((Join-Path $SolutionDir $PreBuildWizardRelativeSourcePath))
+		if ($PreBuildWizardAbsoluteSourcePath.StartsWith($SolutionDir))
 		{
-			$PreBuildWizardAbsoluteSourcePath = [System.IO.Path]::GetFullPath((Join-Path $SolutionDir $PreBuildWizardRelativeSourcePath))
-			if ($PreBuildWizardAbsoluteSourcePath.StartsWith($SolutionDir))
-			{
-				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
-			}
-			else
-			{
-				throw "Path for patching files is outside repository structure."
-			}
+			EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
 		}
 		else
 		{
-			EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$SolutionDir" )
+			throw "Path for patching files is outside repository structure.  SourcePath: $PreBuildWizardAbsoluteSourcePath"
 		}
 	}
 	Catch [Exception]

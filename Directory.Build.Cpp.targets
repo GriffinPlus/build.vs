@@ -107,11 +107,6 @@
     -->
 		<Message Condition="'@(ManagedCompileFiles)' != ''" Text="Injecting .NET AssemblyInfo." Importance="high" />
 		<ItemGroup Condition="'@(ManagedCompileFiles)' != ''">
-			<!-- version information -->
-			<ClCompile Include="$(MSBuildThisFileDirectory)\AssemblyInfoVersion.mcpp">
-				<CompileAsManaged>true</CompileAsManaged>
-				<PrecompiledHeader>NotUsing</PrecompiledHeader>
-			</ClCompile>
 			<!-- repository specific information -->
 			<ClCompile Include="$(CommonAssemblyInfoPath_Cpp)">
 				<CompileAsManaged>true</CompileAsManaged>
