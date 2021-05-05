@@ -13,24 +13,62 @@ function UpdateOutputFileList
 		[Parameter()][string]   $SolutionPath          = $global:SolutionPath,
 		[Parameter()][string[]] $MsbuildConfigurations = $global:BuildConfigurations,
 		[Parameter()][string[]] $MsbuildPlatforms      = $global:BuildPlatforms,
+		[Parameter()][switch]   $IsToolVersionProject,
 		[Parameter()][switch]   $PauseOnError
 	)
 
 	Try
 	{
 		$SolutionDirectoryPath = Split-Path -Path "$SolutionPath"
-		$SolutionName = (Get-Item "$SolutionPath").BaseName
+		$OutputFilesListBasePath = "$SolutionDirectoryPath\out-index"
+		$OutputPath = "$SolutionDirectoryPath\_build\.out"
 
-		foreach ($configuration in $MsbuildConfigurations)
+		# write list of files in output directories
+		Write-Host -ForegroundColor "Green" "Writing list of files in output directories..."
+		foreach ($Project in Get-ChildItem -Path "$OutputPath" -Directory -Exclude *_wpftmp -Force -ErrorAction SilentlyContinue)
 		{
-			foreach ($platform in $MsbuildPlatforms)
+			# enumerate projects under '_build/.out' directory
+			$ProjectPath = "$OutputPath\$($Project.Name)"
+			foreach ($Configuration in $MsbuildConfigurations)
 			{
-				Write-Host -ForegroundColor "Green" "Writing list of files in output directory for platform '$platform' in configuration '$configuration'..."
-				$BuildDirectoryPath = "$SolutionDirectoryPath\_build\$SolutionName.$platform.$configuration"
-				$OutputFilesListPath = "$SolutionDirectoryPath\$SolutionName.$platform.$configuration.files.txt"
-				Push-Location "$BuildDirectoryPath"
-				Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
-				Pop-Location
+				foreach ($Platform in $MsbuildPlatforms)
+				{
+					# enumerate all given combinations of '$Platform.$Configuration' for each project
+					$ConfigurationPath = "$ProjectPath\$Platform.$Configuration"
+					if (!(Test-Path "$ConfigurationPath" -PathType Container))
+					{
+						Write-Host -ForegroundColor "Yellow" "Expected build directory '$ConfigurationPath' does not exist. Skip this configuration for project."
+						continue
+					}
+
+					# clear index of files for specific project with given configuration
+					Remove-Item -Recurse -Path "$OutputFilesListBasePath\$($Project.Name)\$Platform.$Configuration" -ErrorAction Ignore
+					New-Item -Force -Path "$OutputFilesListBasePath" -Name "$($Project.Name)\$Platform.$Configuration" -ItemType "directory" | out-null
+
+					if ($IsToolVersionProject)
+					{
+						# the binaries are directly under the '$ConfigurationPath'
+						$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$Platform.$Configuration\.files.txt"
+						Write-Host "=> $OutputFilesListPath"
+						Push-Location "$ConfigurationPath"
+						Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
+						Pop-Location
+					}
+					else
+					{
+						# foreach given target framework exists a directory
+						foreach ($Target in Get-ChildItem -Path "$ConfigurationPath" -Directory -Force -ErrorAction SilentlyContinue)
+						{
+							# compute index file for each target framework
+							$TargetDirectoryPath = "$ConfigurationPath\$($Target.Name)"
+							$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$Platform.$Configuration\$($Target.Name).files.txt"
+							Write-Host "=> $OutputFilesListPath"
+							Push-Location "$TargetDirectoryPath"
+							Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
+							Pop-Location
+						}
+					}
+				}
 			}
 		}
 	}

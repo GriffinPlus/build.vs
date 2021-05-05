@@ -8,14 +8,28 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<BuildVs_WindowsTargetPlatformVersion>8.1</BuildVs_WindowsTargetPlatformVersion>
 		<CharacterSet>Unicode</CharacterSet>
 		<CLRSupport>false</CLRSupport>
 	</PropertyGroup>
 
+	<Choose>
+		<When Condition="'$(SolutionDir)' == ''">
+			<PropertyGroup>
+				<!--Only a project is build: use relative build path to build.vs submodule-->
+				<BuildVs_CommonBuildPath>$(MSBuildThisFileDirectory)\..\_build\</BuildVs_CommonBuildPath>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<!--A solution is build: use relative common build path to this solution-->
+				<BuildVs_CommonBuildPath>$(SolutionDir)_build\</BuildVs_CommonBuildPath>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
 	<PropertyGroup>
-		<BuildVs_OutDir>..\..\_build\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutDir>
-		<BuildVs_IntDir>..\..\_build\.obj\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_IntDir>
+		<BuildVs_OutDir>$(BuildVs_CommonBuildPath)\.out\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutDir>
+		<BuildVs_IntDir>$(BuildVs_CommonBuildPath)\.obj\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_IntDir>
 		<OutDir>$(BuildVs_OutDir)</OutDir>
 		<IntDir>$(BuildVs_IntDir)</IntDir>
 	</PropertyGroup>

@@ -16,9 +16,24 @@
 		<AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
 
+	<Choose>
+		<When Condition="'$(SolutionDir)' == ''">
+			<PropertyGroup>
+				<!--Only a project is build: use relative build path to build.vs submodule-->
+				<BuildVs_CommonBuildPath>$(MsBuildThisFileDirectory)\..\_build\</BuildVs_CommonBuildPath>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<!--A solution is build: use relative common build path to this solution-->
+				<BuildVs_CommonBuildPath>$(SolutionDir)_build\</BuildVs_CommonBuildPath>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
 	<PropertyGroup>
-		<BuildVs_OutputPath>..\..\_build\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutputPath>
-		<BuildVs_BaseIntermediateOutputPath>..\..\_build\.obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
+		<BuildVs_OutputPath>$(BuildVs_CommonBuildPath)\.out\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutputPath>
+		<BuildVs_BaseIntermediateOutputPath>$(BuildVs_CommonBuildPath)\.obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
 		<BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)\$(Platform).$(Configuration)\</BuildVs_IntermediateOutputPath>
 		<OutputPath>$(BuildVs_OutputPath)</OutputPath>
 		<BaseIntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)</BaseIntermediateOutputPath>

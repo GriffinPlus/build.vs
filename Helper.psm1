@@ -126,7 +126,7 @@ function DownloadBuildTool_Internal
 			$wc.DownloadFile($ToolDownloadUrl, $TempFile)
 			$wc.Dispose()
 
-			# check hash	
+			# check hash
 			Write-Host -ForegroundColor "Green" "Checking hash of '$ToolArchive'..."
 			$FileHash = $(Get-FileHash -Algorithm SHA256 $TempFile).Hash
 			Write-Host -ForegroundColor "Green" "Hash is '$FileHash'."

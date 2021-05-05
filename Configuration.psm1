@@ -150,22 +150,22 @@ if (Test-Path env:MSBUILD_PATH)
 }
 else
 {
-    # determine default location of msbuild.exe, if not specified explicitly
-    # ---------------------------------------------------------------------------------------------
-    [string[]] $MSBUILD_LOCATIONS = @( `
-        'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin', `
-        'C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin', `
-        'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\bin', `
-        'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin')
+	# determine default location of msbuild.exe, if not specified explicitly
+	# ---------------------------------------------------------------------------------------------
+	[string[]] $MSBUILD_LOCATIONS = @( `
+		'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin', `
+		'C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin', `
+		'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\bin', `
+		'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin')
 
-    [string] $MSBUILD_PATH_DEFAULT = ''
-    foreach ($path in $MSBUILD_LOCATIONS)
-    {
-        if (Test-Path "$path\msbuild.exe") {
-            $MSBUILD_PATH_DEFAULT = $path
-            break;
-        }
-    }
+	[string] $MSBUILD_PATH_DEFAULT = ''
+	foreach ($path in $MSBUILD_LOCATIONS)
+	{
+		if (Test-Path "$path\msbuild.exe") {
+			$MSBUILD_PATH_DEFAULT = $path
+			break
+		}
+	}
 
 	$env:MSBUILD_PATH = $MSBUILD_PATH_DEFAULT
 	Write-Host `

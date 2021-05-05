@@ -3,6 +3,7 @@ $ErrorActionPreference = "Stop"
 [String]$ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 Import-Module "$ScriptDir\Helper.psm1"
 Import-Module "$ScriptDir\Configuration.psm1"
+Import-Module "$ScriptDir\UpdateOutputFileList.psm1"
 
 # -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -16,6 +17,7 @@ function Build
 		[Parameter()][string[]] $MsbuildPlatforms      = $global:BuildPlatforms,
 		[Parameter()][string]   $MsbuildProperties,
 		[Parameter()][switch]   $PauseOnError,
+		[Parameter()][switch]   $IsToolVersionProject,
 		[Parameter()][switch]   $SkipConsistencyCheck
 	)
 
@@ -24,16 +26,16 @@ function Build
 
 	Try
 	{
-		foreach ($configuration in $MsbuildConfigurations)
+		foreach ($Configuration in $MsbuildConfigurations)
 		{
-			foreach ($platform in $MsbuildPlatforms)
+			foreach ($Platform in $MsbuildPlatforms)
 			{
 				# build solution for the selected platform/configuration
-				Write-Host -ForegroundColor "Green" "Building solution for platform '$platform' in configuration '$configuration'..."
+				Write-Host -ForegroundColor "Green" "Building solution for platform '$Platform' in configuration '$Configuration'..."
 				$cmd = @($MsbuildPath)
 				$cmd += "$SolutionPath"
-				$cmd += "/property:Configuration=$configuration"
-				$cmd += "/property:Platform=$platform"
+				$cmd += "/property:Configuration=$Configuration"
+				$cmd += "/property:Platform=$Platform"
 				if ($MsbuildProperties) { $cmd += "/property:$MsbuildProperties" }
 				$cmd += "/verbosity:$MsbuildVerbosity"
 				$cmd += "/t:Build"
@@ -41,35 +43,19 @@ function Build
 			}
 		}
 
-		# clear index of files in output directories
-		$OutputFilesListBasePath = "$SolutionDirectoryPath\out-index"
-		Remove-Item -Recurse -Path "$OutputFilesListBasePath" -ErrorAction Ignore
-
-		# write list of files in output directorys
-		Write-Host -ForegroundColor "Green" "Writing list of files in output directories..."
-		$BuildPath = "$SolutionDirectoryPath\_build"
-		foreach ($Project in Get-ChildItem -Path "$BuildPath" -Directory -Exclude .* -Force -ErrorAction SilentlyContinue)
-		{
-			$ProjectPath = "$BuildPath\$($Project.Name)"
-			foreach ($Configuration in Get-ChildItem -Path "$ProjectPath" -Directory -Force -ErrorAction SilentlyContinue)
-			{
-				$ConfigurationPath = "$ProjectPath\$($Configuration.Name)"
-				foreach ($Target in Get-ChildItem -Path "$ConfigurationPath" -Directory -Force -ErrorAction SilentlyContinue)
-				{
-					$TargetDirectoryPath = "$ConfigurationPath\$($Target.Name)"
-					$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)\$($Target.Name).files.txt"
-					New-Item -Force -Path "$OutputFilesListBasePath" -Name "$($Project.Name)\$($Configuration.Name)" -ItemType "directory" | out-null
-					Write-Host "=> $OutputFilesListPath"
-					Push-Location "$TargetDirectoryPath"
-					Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
-					Pop-Location
-				}
-			}
-		}
+		# Update output files for given configurations
+		UpdateOutputFileList `
+			-SolutionPath "$SolutionPath" `
+			-MsbuildConfigurations $MsbuildConfigurations `
+			-MsbuildPlatforms $MsbuildPlatforms `
+			-IsToolVersionProject:$IsToolVersionProject `
+			-PauseOnError:$PauseOnError
 
 		# Check consistency of build output
 		if (!$SkipConsistencyCheck)
 		{
+			$OutputFilesListBasePath = "$SolutionDirectoryPath\out-index"
+
 			Write-Host -ForegroundColor "Green" "Checking consistency of files in output directories..."
 			$cmd = @($GitPath)
 			$cmd += "diff"
