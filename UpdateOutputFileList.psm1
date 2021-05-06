@@ -25,7 +25,7 @@ function UpdateOutputFileList
 
 		# write list of files in output directories
 		Write-Host -ForegroundColor "Green" "Writing list of files in output directories..."
-		foreach ($Project in Get-ChildItem -Path "$OutputPath" -Directory -Exclude *_wpftmp -Force -ErrorAction SilentlyContinue)
+		foreach ($Project in Get-ChildItem -Path "$OutputPath" -Directory -Force -ErrorAction SilentlyContinue)
 		{
 			# enumerate projects under '_build/.out' directory
 			$ProjectPath = "$OutputPath\$($Project.Name)"

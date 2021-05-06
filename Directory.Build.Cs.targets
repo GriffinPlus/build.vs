@@ -6,8 +6,15 @@
 		<Compile Include="$(CommonAssemblyInfoPath_Cs)" />
 	</ItemGroup>
 
+	<!-- ############################################################################## -->
+	<!-- Bugfix for temporary Wpf projects. Currently these projects cause problems on  -->
+	<!-- build server when attempting to copy a xml documentation.                      -->
+	<!-- ############################################################################## -->
+
 	<PropertyGroup>
-		<DocumentationFile Condition="'$(OmitDocumentationFile)'!='true'">$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+		<DocumentationFile Condition="'$(OmitDocumentationFile)'!='true' And !$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '.+_wpftmp'))">
+			$(OutputPath)\$(AssemblyName).xml
+		</DocumentationFile>
 	</PropertyGroup>
 
 	<!-- ############################################################################## -->
@@ -41,6 +48,15 @@
 			Condition="'$(Optimize)' != '$(BuildVs_Optimize)'"
 			Text="The property 'Optimize' was overridden by the project. Please remove setting the 'Optimize' property from the project file." />
 
+	</Target>
+
+	<!-- ############################################################################## -->
+	<!-- Delete temporary compiler output caused by this bug:                           -->
+	<!-- https://github.com/dotnet/wpf/issues/2930                                      -->
+	<!-- ############################################################################## -->
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="FOR /D %%G in (&quot;$(BuildVs_CommonBuildPath)\.out\*_*_wpftmp&quot;) DO RMDIR /S /Q &quot;%%~G&quot;" />
 	</Target>
 
 </Project>

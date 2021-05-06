@@ -26,7 +26,7 @@ function CombineOutputBinaries
 		# consider all projects under '_build'
 		Write-Host -ForegroundColor "Green" "Combine output binaries into base path '$OutputBinariesBasePath' for all projects..."
 
-		foreach ($Project in Get-ChildItem -Path "$OutputPath" -Directory -Exclude *_wpftmp -Force -ErrorAction SilentlyContinue)
+		foreach ($Project in Get-ChildItem -Path "$OutputPath" -Directory -Force -ErrorAction SilentlyContinue)
 		{
 			Push-Location "$OutputPath\$($Project.Name)"
 
