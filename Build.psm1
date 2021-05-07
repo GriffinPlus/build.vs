@@ -46,8 +46,6 @@ function Build
 		# Update output files for given configurations
 		UpdateOutputFileList `
 			-SolutionPath "$SolutionPath" `
-			-MsbuildConfigurations $MsbuildConfigurations `
-			-MsbuildPlatforms $MsbuildPlatforms `
 			-IsToolVersionProject:$IsToolVersionProject `
 			-PauseOnError:$PauseOnError
 

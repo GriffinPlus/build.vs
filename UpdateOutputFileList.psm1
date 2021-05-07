@@ -11,8 +11,6 @@ function UpdateOutputFileList
 	Param
 	(
 		[Parameter()][string]   $SolutionPath          = $global:SolutionPath,
-		[Parameter()][string[]] $MsbuildConfigurations = $global:BuildConfigurations,
-		[Parameter()][string[]] $MsbuildPlatforms      = $global:BuildPlatforms,
 		[Parameter()][switch]   $IsToolVersionProject,
 		[Parameter()][switch]   $PauseOnError
 	)
@@ -29,44 +27,36 @@ function UpdateOutputFileList
 		{
 			# enumerate projects under '_build/.out' directory
 			$ProjectPath = "$OutputPath\$($Project.Name)"
-			foreach ($Configuration in $MsbuildConfigurations)
+			foreach ($Configuration in Get-ChildItem -Path "ProjectPath" -Directory -Force -ErrorAction SilentlyContinue)
 			{
-				foreach ($Platform in $MsbuildPlatforms)
+				# enumerate all given combinations of platform and configuration for each project
+				$ConfigurationPath = "$ProjectPath\$($Configuration.Name)"
+
+				# clear index of files for specific project with given configuration
+				Remove-Item -Recurse -Path "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)" -ErrorAction Ignore
+				New-Item -Force -Path "$OutputFilesListBasePath" -Name "$($Project.Name)\$($Configuration.Name)" -ItemType "directory" | out-null
+
+				if ($IsToolVersionProject)
 				{
-					# enumerate all given combinations of '$Platform.$Configuration' for each project
-					$ConfigurationPath = "$ProjectPath\$Platform.$Configuration"
-					if (!(Test-Path "$ConfigurationPath" -PathType Container))
+					# the binaries are directly under the '$ConfigurationPath'
+					$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)\.files.txt"
+					Write-Host "=> $OutputFilesListPath"
+					Push-Location "$ConfigurationPath"
+					Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
+					Pop-Location
+				}
+				else
+				{
+					# foreach given target framework exists a directory
+					foreach ($Target in Get-ChildItem -Path "$ConfigurationPath" -Directory -Force -ErrorAction SilentlyContinue)
 					{
-						Write-Host -ForegroundColor "Yellow" "Expected build directory '$ConfigurationPath' does not exist. Skip this configuration for project."
-						continue
-					}
-
-					# clear index of files for specific project with given configuration
-					Remove-Item -Recurse -Path "$OutputFilesListBasePath\$($Project.Name)\$Platform.$Configuration" -ErrorAction Ignore
-					New-Item -Force -Path "$OutputFilesListBasePath" -Name "$($Project.Name)\$Platform.$Configuration" -ItemType "directory" | out-null
-
-					if ($IsToolVersionProject)
-					{
-						# the binaries are directly under the '$ConfigurationPath'
-						$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$Platform.$Configuration\.files.txt"
+						# compute index file for each target framework
+						$TargetDirectoryPath = "$ConfigurationPath\$($Target.Name)"
+						$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)\$($Target.Name).files.txt"
 						Write-Host "=> $OutputFilesListPath"
-						Push-Location "$ConfigurationPath"
+						Push-Location "$TargetDirectoryPath"
 						Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
 						Pop-Location
-					}
-					else
-					{
-						# foreach given target framework exists a directory
-						foreach ($Target in Get-ChildItem -Path "$ConfigurationPath" -Directory -Force -ErrorAction SilentlyContinue)
-						{
-							# compute index file for each target framework
-							$TargetDirectoryPath = "$ConfigurationPath\$($Target.Name)"
-							$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$Platform.$Configuration\$($Target.Name).files.txt"
-							Write-Host "=> $OutputFilesListPath"
-							Push-Location "$TargetDirectoryPath"
-							Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
-							Pop-Location
-						}
 					}
 				}
 			}
