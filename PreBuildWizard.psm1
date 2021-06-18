@@ -20,6 +20,7 @@ function PreBuildWizard
 	(
 		[Parameter()][string] $SolutionPath = $global:SolutionPath,
 		[Parameter()][string] $PreBuildWizardRelativeSourcePath = "src",
+		[Parameter()][switch] $SkipNuGetConsistencyCheck,
 		[Parameter()][switch] $PauseOnError
 	)
 
@@ -44,7 +45,14 @@ function PreBuildWizard
 		$PreBuildWizardAbsoluteSourcePath = [System.IO.Path]::GetFullPath((Join-Path $SolutionDir $PreBuildWizardRelativeSourcePath))
 		if ($PreBuildWizardAbsoluteSourcePath.StartsWith($SolutionDir))
 		{
-			EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
+			if ($SkipNuGetConsistencyCheck)
+			{
+				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
+			}
+			else
+			{
+				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
+			}
 		}
 		else
 		{
