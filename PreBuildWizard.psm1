@@ -47,11 +47,11 @@ function PreBuildWizard
 		{
 			if ($SkipNuGetConsistencyCheck)
 			{
-				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
+				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "$PreBuildWizardAbsoluteSourcePath" )
 			}
 			else
 			{
-				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath", "$ScriptDir" )
+				EnvRunExec ( "dotnet.exe", "$PreBuildWizardToolPath", "-b", "$BaseIntermediateOutputPath", "$PreBuildWizardAbsoluteSourcePath" )
 			}
 		}
 		else
