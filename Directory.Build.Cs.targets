@@ -56,7 +56,7 @@
 	<!-- ############################################################################## -->
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="FOR /D %%G in (&quot;$(BuildVs_CommonBuildPath)\.out\*_*_wpftmp&quot;) DO RMDIR /S /Q &quot;%%~G&quot;" />
+		<Exec Condition="'$(IsWindows)' == 'true'" Command="FOR /D %%G in (&quot;$(BuildVs_CommonBuildPath)\.out\*_*_wpftmp&quot;) DO RMDIR /S /Q &quot;%%~G&quot;" />
 	</Target>
 
 </Project>
