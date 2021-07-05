@@ -31,7 +31,7 @@
 		<Message Importance="High" Text="File: %(NuspecFiles.Identity)" Condition="'@(NuspecFiles)' != ''"/>
 		<Message Importance="High" Text="No NuGet packages found." Condition="'@(NuspecFiles)' == ''"/>
 		<Message Importance="High" Text="------------------------------------------------------------------------------------------------------------------" />
-		<Exec Condition="'@(NuspecFiles)' != ''" Command="&quot;$(NuGetToolPath)&quot; pack &quot;%(NuspecFiles.Identity)&quot; -OutputDirectory &quot;$(NuGetOutputDir)&quot; -Properties &quot;version=$(NuGetPackageVersion)&quot; -Properties &quot;inner_repository_next_major_version=$(InnerRepositoryNextMajorVersion)&quot;" />
+		<Exec Condition="'@(NuspecFiles)' != ''" Command="&quot;$(NuGetToolPath)&quot; pack &quot;%(NuspecFiles.Identity)&quot; -Symbols -SymbolPackageFormat snupkg -OutputDirectory &quot;$(NuGetOutputDir)&quot; -Properties &quot;version=$(NuGetPackageVersion)&quot; -Properties &quot;inner_repository_next_major_version=$(InnerRepositoryNextMajorVersion)&quot;" />
 		<Message Importance="High" Text="------------------------------------------------------------------------------------------------------------------" />
 		<Message Importance="High" Text="" />
 	</Target>
