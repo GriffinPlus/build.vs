@@ -7,7 +7,7 @@
 		<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
 		<IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
 	</PropertyGroup>
-	
+
 	<PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
 		<IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
 		<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
@@ -26,7 +26,7 @@
 		<When Condition="'$(SolutionDir)' == ''">
 			<PropertyGroup>
 				<!--Only a project is build: use relative build path to build.vs submodule-->
-				<BuildVs_CommonBuildPath>$(MsBuildThisFileDirectory)\..\_build\</BuildVs_CommonBuildPath>
+				<BuildVs_CommonBuildPath>$(MSBuildThisFileDirectory)..\_build\</BuildVs_CommonBuildPath>
 			</PropertyGroup>
 		</When>
 		<Otherwise>
@@ -38,9 +38,11 @@
 	</Choose>
 
 	<PropertyGroup>
-		<BuildVs_OutputPath>$(BuildVs_CommonBuildPath)\.out\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutputPath>
-		<BuildVs_BaseIntermediateOutputPath>$(BuildVs_CommonBuildPath)\.obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
-		<BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)\$(Platform).$(Configuration)\</BuildVs_IntermediateOutputPath>
+		<BuildVs_BaseOutputPath>$(BuildVs_CommonBuildPath).out\$(MSBuildProjectName)\</BuildVs_BaseOutputPath>
+		<BuildVs_OutputPath>$(BuildVs_BaseOutputPath)$(Platform).$(Configuration)\</BuildVs_OutputPath>
+		<BuildVs_BaseIntermediateOutputPath>$(BuildVs_CommonBuildPath).obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
+		<BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)$(Platform).$(Configuration)\</BuildVs_IntermediateOutputPath>
+		<BaseOutputPath>$(BuildVs_BaseOutputPath)</BaseOutputPath>
 		<OutputPath>$(BuildVs_OutputPath)</OutputPath>
 		<BaseIntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)</BaseIntermediateOutputPath>
 		<IntermediateOutputPath>$(BuildVs_IntermediateOutputPath)</IntermediateOutputPath>
