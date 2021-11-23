@@ -27,7 +27,7 @@ function UpdateOutputFileList
 		{
 			# enumerate projects under '_build/.out' directory
 			$ProjectPath = "$OutputPath\$($Project.Name)"
-			foreach ($Configuration in Get-ChildItem -Path "ProjectPath" -Directory -Force -ErrorAction SilentlyContinue)
+			foreach ($Configuration in Get-ChildItem -Path "$ProjectPath" -Directory -Force -ErrorAction SilentlyContinue)
 			{
 				# enumerate all given combinations of platform and configuration for each project
 				$ConfigurationPath = "$ProjectPath\$($Configuration.Name)"
