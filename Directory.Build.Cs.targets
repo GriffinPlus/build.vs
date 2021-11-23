@@ -24,29 +24,32 @@
 	<Target Name="CheckForInvalidOverrides" BeforeTargets="Build">
 
 		<!-- BaseIntermediateOutputPath -->
-		<!--
 		<Error
 			Condition="'$(BaseIntermediateOutputPath)' != '$(BuildVs_BaseIntermediateOutputPath)' and '$(BuildVs_Override_BaseIntermediateOutputPath)' != 'true'"
 			Text="The property 'BaseIntermediateOutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_BaseIntermediateOutputPath' property to 'true'. Otherwise remove setting the 'BaseIntermediateOutputPath' property from the project file." />
-		-->
 
 		<!-- IntermediateOutputPath : Overridden by build scripts -->
 		<!-- OutputPath : Overridden by build scripts -->
 
+		<!-- PlatformTarget -->
+		<Error
+			Condition="'$(PlatformTarget)' != '$(BuildVs_PlatformTarget)'"
+			Text="The property 'PlatformTarget' was overridden by the project. Please remove setting the 'PlatformTarget' property from the project file or set the 'BuildVs_PlatformTarget' property appropriately." />
+
 		<!-- DebugSymbols -->
 		<Error
 			Condition="'$(DebugSymbols)' != '$(BuildVs_DebugSymbols)'"
-			Text="The property 'DebugSymbols' was overridden by the project. Please remove setting the 'DebugSymbols' property from the project file." />
+			Text="The property 'DebugSymbols' was overridden by the project. Please remove setting the 'DebugSymbols' property from the project file or set the 'BuildVs_DebugSymbols' property appropriately." />
 
 		<!-- DebugType -->
 		<Error
 			Condition="'$(DebugType)' != '$(BuildVs_DebugType)'"
-			Text="The property 'DebugType' was overridden by the project. Please remove setting the 'DebugType' property from the project file." />
+			Text="The property 'DebugType' was overridden by the project. Please remove setting the 'DebugType' property from the project file or set the 'BuildVs_DebugType' property appropriately." />
 
 		<!-- Optimize -->
 		<Error
 			Condition="'$(Optimize)' != '$(BuildVs_Optimize)'"
-			Text="The property 'Optimize' was overridden by the project. Please remove setting the 'Optimize' property from the project file." />
+			Text="The property 'Optimize' was overridden by the project. Please remove setting the 'Optimize' property from the project file or set the 'BuildVs_Optimize' property appropriately." />
 
 	</Target>
 
