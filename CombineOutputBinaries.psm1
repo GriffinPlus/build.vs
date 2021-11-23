@@ -42,8 +42,7 @@ function CombineOutputBinaries
 						# files are not the same --> throw exception
 						throw "Found binary incompatibility for '$BinaryPath' in project '$($Project.Name)'..."
 					}
-					$path = [IO.Path]::GetFullPath("$($Project.Name)\$BinaryPath")
-					Write-Host "EXISTS:    $path"
+					Write-Host "EXISTS:    Project: $($Project.Name), File: $BinaryPath"
 				}
 				else
 				{
@@ -55,8 +54,7 @@ function CombineOutputBinaries
 					}
 
 					Copy-Item -Path "$BinaryPath" -Destination "$OutputBinaryPath"
-					$path = [IO.Path]::GetFullPath("$($Project.Name)\$BinaryPath")
-					Write-Host "COPIED:    $path"
+					Write-Host "COPIED:    Project: $($Project.Name), File: $BinaryPath"
 				}
 			}
 
