@@ -12,6 +12,13 @@
 		<CLRSupport>false</CLRSupport>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<UnifiedPlatform>Unknown</UnifiedPlatform>
+		<UnifiedPlatform Condition="'$(Platform)' == 'Win32'">x86</UnifiedPlatform>
+		<UnifiedPlatform Condition="'$(Platform)' == 'x86'">x86</UnifiedPlatform>
+		<UnifiedPlatform Condition="'$(Platform)' == 'x64'">x64</UnifiedPlatform>
+	</PropertyGroup>
+
 	<Choose>
 		<When Condition="'$(SolutionDir)' == ''">
 			<PropertyGroup>
@@ -28,8 +35,8 @@
 	</Choose>
 
 	<PropertyGroup>
-		<BuildVs_OutDir>$(BuildVs_CommonBuildPath)\.out\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_OutDir>
-		<BuildVs_IntDir>$(BuildVs_CommonBuildPath)\.obj\$(MSBuildProjectName)\$(Platform).$(Configuration)\</BuildVs_IntDir>
+		<BuildVs_OutDir>$(BuildVs_CommonBuildPath)\.out\$(MSBuildProjectName)\$(UnifiedPlatform).$(Configuration)\</BuildVs_OutDir>
+		<BuildVs_IntDir>$(BuildVs_CommonBuildPath)\.obj\$(MSBuildProjectName)\$(UnifiedPlatform).$(Configuration)\</BuildVs_IntDir>
 		<OutDir>$(BuildVs_OutDir)</OutDir>
 		<IntDir>$(BuildVs_IntDir)</IntDir>
 	</PropertyGroup>
