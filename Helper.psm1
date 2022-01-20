@@ -107,9 +107,8 @@ function DownloadBuildTool_Internal
 	)
 
 	$7ZipToolPath = "$ScriptDir\bin\7zip\7z.exe"
-	$TemporaryDirectory = [System.IO.Path]::GetTempPath()
-	$ToolArchive = "$TemporaryDirectory\build-tools\$ToolVersionHash.zip"
-	$ToolDirectory = "$TemporaryDirectory\build-tools\$ToolVersionHash"
+	$ToolArchive = "$ScriptDir\_tools\$ToolVersionHash.zip"
+	$ToolDirectory = "$ScriptDir\_tools\$ToolVersionHash"
 
 	Write-Host -ForegroundColor "Green" "Check if $ToolName in version '$ToolVersionHash' already exists..."
 
@@ -120,21 +119,20 @@ function DownloadBuildTool_Internal
 		$TempFile = [System.IO.Path]::GetTempFileName()
 		Try
 		{
-			New-Item -Itemtype directory -Force $(Split-Path $ToolArchive) | Out-Null
 			[Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
 			$wc = [System.Net.WebClient]::new()
 			$wc.DownloadFile($ToolDownloadUrl, $TempFile)
 			$wc.Dispose()
 
 			# check hash
-			Write-Host -ForegroundColor "Green" "Checking hash of '$ToolArchive'..."
+			Write-Host -ForegroundColor "Green" "Checking hash of '$TempFile'..."
 			$FileHash = $(Get-FileHash -Algorithm SHA256 $TempFile).Hash
 			Write-Host -ForegroundColor "Green" "Hash is '$FileHash'."
 			
 			# interrupt processing if hash values do not match
 			if ($FileHash -ne $ToolVersionHash)
 			{
-				Write-Host -ForegroundColor "Red" "Hash of downloaded '$ToolArchive' does not match. Stopping further processing..."
+				Write-Host -ForegroundColor "Red" "Hash of downloaded '$TempFile' does not match. Stopping further processing..."
 				throw "Processing aborted. Please see log for further details..."
 			}
 
