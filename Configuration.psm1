@@ -13,6 +13,7 @@ $ErrorActionPreference = "Stop"
 [string] $PRODUCT_NAME_DEFAULT                     = "Default"
 [string] $RELEASE_DIRECTORY_DEFAULT                = "C:\Releases"
 [string] $GIT_PATH_DEFAULT                         = "C:\Program Files\Git\bin"
+[String] $PANDOC_PATH_DEFAULT                      = "C:\Program Files\Pandoc\pandoc.exe"
 [string] $BUILD_CONFIGURATIONS_DEFAULT             = "Debug,Release"
 [string] $BUILD_PLATFORMS_DEFAULT                  = "Any CPU,x86,x64"
 [string] $USE_REPO_NUGET_CACHE_DEFAULT             = "false"
@@ -180,6 +181,25 @@ $global:MsbuildPath = "$global:MsbuildDirectoryPath\msbuild.exe"
 
 # push msbuild binary directory to PATH variable to ensure that nuget.exe finds the correct one
 $env:PATH = "$global:MsbuildDirectoryPath;$env:PATH"
+
+# ---------------------------------------------------------------------------------------------------------------------
+
+if (Test-Path env:PANDOC_PATH)
+{
+    $env:PANDOC_PATH = $env:PANDOC_PATH.Trim()
+    Write-Host `
+        -ForegroundColor "Green" `
+        "Environment variable PANDOC_PATH is set to: $env:PANDOC_PATH"
+}
+else
+{
+    $env:PANDOC_PATH = $PANDOC_PATH_DEFAULT
+    Write-Host `
+        -ForegroundColor "Green"
+        "Environment variable PANDOC_PATH is not set. Falling back to: $env:PANDOC_PATH"
+}
+
+$global:PandocPath = $env:PANDOC_PATH
 
 # ---------------------------------------------------------------------------------------------------------------------
 
