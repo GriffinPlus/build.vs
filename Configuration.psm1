@@ -154,17 +154,18 @@ else
 	# determine default location of msbuild.exe, if not specified explicitly
 	# ---------------------------------------------------------------------------------------------
 	[string[]] $MSBUILD_LOCATIONS = @( `
-		'C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\bin', `
+		'C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin', `
 		'C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin', `
-		'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin', `
 		'C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin', `
-		'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\bin', `
-		'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin')
+		'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin', `
+		'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin', `
+		'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\bin')
 
 	[string] $MSBUILD_PATH_DEFAULT = ''
 	foreach ($path in $MSBUILD_LOCATIONS)
 	{
-		if (Test-Path "$path\msbuild.exe") {
+		if (Test-Path "$path\msbuild.exe")
+		{
 			$MSBUILD_PATH_DEFAULT = $path
 			break
 		}

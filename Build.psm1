@@ -17,7 +17,6 @@ function Build
 		[Parameter()][string[]] $MsbuildPlatforms      = $global:BuildPlatforms,
 		[Parameter()][string]   $MsbuildProperties,
 		[Parameter()][switch]   $PauseOnError,
-		[Parameter()][switch]   $IsToolVersionProject,
 		[Parameter()][switch]   $SkipConsistencyCheck
 	)
 
@@ -46,7 +45,6 @@ function Build
 		# Update output files for given configurations
 		UpdateOutputFileList `
 			-SolutionPath "$SolutionPath" `
-			-IsToolVersionProject:$IsToolVersionProject `
 			-PauseOnError:$PauseOnError
 
 		# Check consistency of build output

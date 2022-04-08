@@ -19,7 +19,7 @@
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<!-- .NET Core projects will otherwise generate conflicting assembly info -->
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -27,6 +27,30 @@
 		<UnifiedPlatform Condition="'$(Platform)' == 'x86'">x86</UnifiedPlatform>
 		<UnifiedPlatform Condition="'$(Platform)' == 'x64'">x64</UnifiedPlatform>
 		<UnifiedPlatform Condition="'$(Platform)' == 'AnyCPU'">AnyCPU</UnifiedPlatform>
+	</PropertyGroup>
+
+	<!-- Determine Target Framework Moniker for old C# Projects -->
+	<PropertyGroup>
+		<UnifiedTargetFramework>$(TargetFramework)</UnifiedTargetFramework>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(UnifiedTargetFramework)' == ''">
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v1.0'">net10</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v2.0'">net20</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v3.0'">net30</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v3.5'">net35</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.0'">net40</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.0.3'">net403</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.5'">net45</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.5.1'">net451</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.5.2'">net452</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.6'">net46</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.6.1'">net461</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.6.2'">net462</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.7'">net47</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.7.1'">net471</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.7.2'">net472</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(TargetFrameworkVersion)' == 'v4.8'">net48</UnifiedTargetFramework>
+		<UnifiedTargetFramework Condition="'$(UnifiedTargetFramework)' == ''">unknown</UnifiedTargetFramework>
 	</PropertyGroup>
 
 	<Choose>
@@ -46,9 +70,9 @@
 
 	<PropertyGroup>
 		<BuildVs_BaseOutputPath>$(BuildVs_CommonBuildPath).out\$(MSBuildProjectName)\</BuildVs_BaseOutputPath>
-		<BuildVs_OutputPath>$(BuildVs_BaseOutputPath)$(UnifiedPlatform).$(Configuration)\</BuildVs_OutputPath>
+		<BuildVs_OutputPath>$(BuildVs_BaseOutputPath)$(Platform).$(Configuration)\$(UnifiedTargetFramework)\</BuildVs_OutputPath>
 		<BuildVs_BaseIntermediateOutputPath>$(BuildVs_CommonBuildPath).obj\$(MSBuildProjectName)\</BuildVs_BaseIntermediateOutputPath>
-		<BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)$(UnifiedPlatform).$(Configuration)\</BuildVs_IntermediateOutputPath>
+		<BuildVs_IntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)$(Platform).$(Configuration)\$(UnifiedTargetFramework)\</BuildVs_IntermediateOutputPath>
 		<BaseOutputPath>$(BuildVs_BaseOutputPath)</BaseOutputPath>
 		<OutputPath>$(BuildVs_OutputPath)</OutputPath>
 		<BaseIntermediateOutputPath>$(BuildVs_BaseIntermediateOutputPath)</BaseIntermediateOutputPath>

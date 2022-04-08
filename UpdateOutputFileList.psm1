@@ -10,8 +10,7 @@ function UpdateOutputFileList
 {
 	Param
 	(
-		[Parameter()][string]   $SolutionPath          = $global:SolutionPath,
-		[Parameter()][switch]   $IsToolVersionProject,
+		[Parameter()][string]   $SolutionPath = $global:SolutionPath,
 		[Parameter()][switch]   $PauseOnError
 	)
 
@@ -36,28 +35,16 @@ function UpdateOutputFileList
 				Remove-Item -Recurse -Path "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)" -ErrorAction Ignore
 				New-Item -Force -Path "$OutputFilesListBasePath" -Name "$($Project.Name)\$($Configuration.Name)" -ItemType "directory" | out-null
 
-				if ($IsToolVersionProject)
+				# foreach given target framework exists a directory
+				foreach ($Target in Get-ChildItem -Path "$ConfigurationPath" -Directory -Force -ErrorAction SilentlyContinue)
 				{
-					# the binaries are directly under the '$ConfigurationPath'
-					$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)\.files.txt"
+					# compute index file for each target framework
+					$TargetDirectoryPath = "$ConfigurationPath\$($Target.Name)"
+					$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)\$($Target.Name).files.txt"
 					Write-Host "=> $OutputFilesListPath"
-					Push-Location "$ConfigurationPath"
+					Push-Location "$TargetDirectoryPath"
 					Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
 					Pop-Location
-				}
-				else
-				{
-					# foreach given target framework exists a directory
-					foreach ($Target in Get-ChildItem -Path "$ConfigurationPath" -Directory -Force -ErrorAction SilentlyContinue)
-					{
-						# compute index file for each target framework
-						$TargetDirectoryPath = "$ConfigurationPath\$($Target.Name)"
-						$OutputFilesListPath = "$OutputFilesListBasePath\$($Project.Name)\$($Configuration.Name)\$($Target.Name).files.txt"
-						Write-Host "=> $OutputFilesListPath"
-						Push-Location "$TargetDirectoryPath"
-						Get-ChildItem -Recurse -Force -Attributes !Directory | Resolve-Path -Relative | Out-File -Encoding utf8 "$OutputFilesListPath"
-						Pop-Location
-					}
 				}
 			}
 		}

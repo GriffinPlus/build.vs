@@ -26,30 +26,42 @@
 		<!-- BaseIntermediateOutputPath -->
 		<Error
 			Condition="'$(BaseIntermediateOutputPath)' != '$(BuildVs_BaseIntermediateOutputPath)' and '$(BuildVs_Override_BaseIntermediateOutputPath)' != 'true'"
-			Text="The property 'BaseIntermediateOutputPath' was overridden by the project. If this was desired, please set the 'BuildVs_Override_BaseIntermediateOutputPath' property to 'true'. Otherwise remove setting the 'BaseIntermediateOutputPath' property from the project file." />
+			Text="The property 'BaseIntermediateOutputPath' was overridden by the project (Expected: '$(BuildVs_BaseIntermediateOutputPath)', Actual: '$(BaseIntermediateOutputPath)'). If this was desired, please set the 'BuildVs_Override_BaseIntermediateOutputPath' property to 'true'. Otherwise remove setting the 'BaseIntermediateOutputPath' property from the project file." />
 
-		<!-- IntermediateOutputPath : Overridden by build scripts -->
-		<!-- OutputPath : Overridden by build scripts -->
+		<!-- IntermediateOutputPath -->
+		<Error
+			Condition="'$(IntermediateOutputPath)' != '$(BuildVs_IntermediateOutputPath)' and '$(BuildVs_Override_IntermediateOutputPath)' != 'true'"
+			Text="The property 'IntermediateOutputPath' was overridden by the project (Expected: '$(BuildVs_IntermediateOutputPath)', Actual: '$(IntermediateOutputPath)'). If this was desired, please set the 'BuildVs_Override_IntermediateOutputPath' property to 'true'. Otherwise remove setting the 'IntermediateOutputPath' property from the project file." />
+
+		<!-- BaseOutputPath -->
+		<Error
+			Condition="'$(BaseOutputPath)' != '$(BuildVs_BaseOutputPath)' and '$(BuildVs_Override_BaseOutputPath)' != 'true'"
+			Text="The property 'BaseOutputPath' was overridden by the project (Expected: '$(BuildVs_BaseOutputPath)', Actual: '$(BaseOutputPath)'). If this was desired, please set the 'BuildVs_Override_BaseOutputPath' property to 'true'. Otherwise remove setting the 'BaseOutputPath' property from the project file." />
+
+		<!-- OutputPath -->
+		<Error
+			Condition="'$(OutputPath)' != '$(BuildVs_OutputPath)' and '$(BuildVs_Override_OutputPath)' != 'true'"
+			Text="The property 'OutputPath' was overridden by the project (Expected: '$(BuildVs_OutputPath)', Actual: '$(OutputPath)'). If this was desired, please set the 'BuildVs_Override_OutputPath' property to 'true'. Otherwise remove setting the 'OutputPath' property from the project file." />
 
 		<!-- PlatformTarget -->
 		<Error
 			Condition="'$(PlatformTarget)' != '$(BuildVs_PlatformTarget)'"
-			Text="The property 'PlatformTarget' was overridden by the project. Please remove setting the 'PlatformTarget' property from the project file or set the 'BuildVs_PlatformTarget' property appropriately." />
+			Text="The property 'PlatformTarget' was overridden by the project (Expected: '$(BuildVs_PlatformTarget)', Actual: '$(PlatformTarget)'). Please remove setting the 'PlatformTarget' property from the project file or set the 'BuildVs_PlatformTarget' property appropriately." />
 
 		<!-- DebugSymbols -->
 		<Error
 			Condition="'$(DebugSymbols)' != '$(BuildVs_DebugSymbols)'"
-			Text="The property 'DebugSymbols' was overridden by the project. Please remove setting the 'DebugSymbols' property from the project file or set the 'BuildVs_DebugSymbols' property appropriately." />
+			Text="The property 'DebugSymbols' was overridden by the project (Expected: '$(BuildVs_DebugSymbols)', Actual: '$(DebugSymbols)'). Please remove setting the 'DebugSymbols' property from the project file or set the 'BuildVs_DebugSymbols' property appropriately." />
 
 		<!-- DebugType -->
 		<Error
 			Condition="'$(DebugType)' != '$(BuildVs_DebugType)'"
-			Text="The property 'DebugType' was overridden by the project. Please remove setting the 'DebugType' property from the project file or set the 'BuildVs_DebugType' property appropriately." />
+			Text="The property 'DebugType' was overridden by the project (Expected: '$(BuildVs_DebugType)', Actual: '$(DebugType)'). Please remove setting the 'DebugType' property from the project file or set the 'BuildVs_DebugType' property appropriately." />
 
 		<!-- Optimize -->
 		<Error
 			Condition="'$(Optimize)' != '$(BuildVs_Optimize)'"
-			Text="The property 'Optimize' was overridden by the project. Please remove setting the 'Optimize' property from the project file or set the 'BuildVs_Optimize' property appropriately." />
+			Text="The property 'Optimize' was overridden by the project (Expected: '$(BuildVs_Optimize)', Actual: '$(Optimize)'). Please remove setting the 'Optimize' property from the project file or set the 'BuildVs_Optimize' property appropriately." />
 
 	</Target>
 
