@@ -9,8 +9,8 @@ Import-Module "$ScriptDir\Helper.psm1"
 
 # Properties
 [string] $ToolName = "PreBuildWizard"
-[string] $ToolDownloadUrl = "https://github.com/GriffinPlus/PreBuildWizard/releases/download/v3.0.1/PreBuildWizard-portable-v3.0.1.zip"
-[string] $ToolVersionHash = "64CC28E111E138BA66335297B4D9CECAB9B4462E07013DB2095A3E4D59D2B86B"
+[string] $ToolDownloadUrl = "https://github.com/GriffinPlus/PreBuildWizard/releases/download/v3.0.2/PreBuildWizard-portable-v3.0.2.zip"
+[string] $ToolVersionHash = "3E97629175F04D1936DCC67834BBEECFBAA23EA6F0DF40FD5F02BA84387E9108"
 
 #-------------------------------------------------------------------------------------------------------------------------------------
 
